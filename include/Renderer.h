@@ -13,9 +13,9 @@ public:
 	/// <summary>
 	/// Takes a scene and renders to image_ with colors in range [0,1]
 	/// </summary>
-	glm::vec4 trace(glm::vec3& rayOrigo, glm::vec3& rayDirection, const int& depth);
 	void Render();
 	glm::vec3 getInitialRay();
+	glm::vec4 trace(glm::vec3& rayOrigo, glm::vec3& rayDirection, const int& depth);
 	unsigned char* getImageTextureData() const;
 private:
 	uint32_t width_;

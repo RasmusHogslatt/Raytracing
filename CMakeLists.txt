@@ -25,6 +25,8 @@ set(HEADER_FILES
     include/Renderer.h
     include/Object.h
     include/Material.h
+    include/Window.h
+    include/Event.h
 )
 
 set(SOURCE_FILES
@@ -35,6 +37,8 @@ set(SOURCE_FILES
     source/Renderer.cpp
     source/Object.cpp
     source/Material.cpp
+    source/Window.cpp
+    source/Event.cpp
 )
 
 # Add header with path to resources and add header to include directory
