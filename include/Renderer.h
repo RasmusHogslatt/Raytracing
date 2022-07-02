@@ -15,7 +15,7 @@ public:
 	/// </summary>
 	void Render();
 	glm::vec3 getInitialRay();
-	glm::vec4 trace(glm::vec3& rayOrigo, glm::vec3& rayDirection, const int& depth);
+	//glm::vec4 trace(glm::vec3& rayOrigo, glm::vec3& rayDirection, const int& depth);
 	unsigned char* getImageTextureData() const;
 private:
 	uint32_t width_;
@@ -23,6 +23,6 @@ private:
 	Texture &image_;
 	glm::vec3 cameraPosition_ = glm::vec3(0);
 	float fov_ = 30.0f;
-	std::vector<Object> scene_ = std::vector<Object>();
+	//std::vector<Object> scene_ = std::vector<Object>();
 	int maxDepth_ = 3;
 };
