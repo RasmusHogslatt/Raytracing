@@ -23,6 +23,5 @@ private:
 	Texture &image_;
 	glm::vec3 cameraPosition_ = glm::vec3(0);
 	float fov_ = 30.0f;
-	//std::vector<Object> scene_ = std::vector<Object>();
 	int maxDepth_ = 3;
 };

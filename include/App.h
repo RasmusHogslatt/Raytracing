@@ -34,27 +34,21 @@ public:
 	/// </summary>
 	void startUp();
 
+
 	/// <summary>
 	/// Do things in application loop using layers
 	/// </summary>
 	void update();
+
+	void render();
+	void renderUI();
 
 	/// <summary>
 	/// After application loop ends
 	/// </summary>
 	void close();
 
-
-
-	template<typename T>
-	void pushLayer()
-	{
-		static_assert(std::is_base_of<Layer, T>::value, "Pushed type is not subclass of Layer!");
-		layerStack_.emplace_back(std::make_shared<T>())->onAttach();
-	}
-
 	static App* instance_;
-	void pushLayer(const std::shared_ptr<Layer>& layer) { layerStack_.emplace_back(layer); layer->onAttach(); }
 private:
 	void GUI();
 
@@ -62,8 +56,28 @@ private:
 	GLFWwindow* window_ = nullptr;
 	int width_, height_;
 	ImVec4 clearColor_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	std::vector<std::shared_ptr<Layer>> layerStack_;
-	bool closeApplication_ = false;
 	Texture viewportTexture_;
 	Texture renderTexture_;
+	int x = 0;
+	ImVec2 pos = ImVec2(0,0);
+	std::vector<ImVec2> positions; // Construct objects from positions
 };
+
+/*
+* void Render()
+{
+    your raytracing parts here
+}
+
+void RenderUi()
+{
+    your imgui calls here
+}
+
+while (!glfwDindowShouldClose(window))
+{
+    Update();
+    Render();
+    RenderUi();
+}
+*/

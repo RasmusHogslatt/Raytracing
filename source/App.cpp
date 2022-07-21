@@ -9,29 +9,30 @@ void App::startUp()
 {
 	std::cout << "Welcome to Gamma!\n";
 	renderTexture_.createTexture(ImVec4(1, 0, 0, 1));
-	viewportTexture_.createTexture(ImVec4(1, 0, 1, 1));
+	viewportTexture_.createTexture(ImVec4(1, 0, 0, 1));
 
 	Renderer renderer(renderTexture_);
 	renderer.Render();
 	renderTexture_.setData(renderer.getImageTextureData());
 	renderTexture_.updateTextureData();
-	
 }
 
 // Add gui layers
-void App::update()
+void App::update() {}
+
+void App::render()
+{
+
+}
+
+void App::renderUI()
 {
 	updateWindowSizeAndPosition();
 	GUI();
-	for (auto& layer : layerStack_)
-	{
-		layer->onRender();
-	}
 }
 
 void App::close()
 {
-	closeApplication_ = true;
 	glfwSetWindowShouldClose(window_, true);
 }
 
@@ -57,20 +58,28 @@ void App::GUI()
 			}
 			ImGui::EndMenuBar();
 		}
-
+		
 		// Left pane properties
 		{
 			ImGui::BeginGroup();
 			ImGui::BeginChild("LeftProperties", ImVec2(300, 0), true);
+
+			ImGui::SliderFloat("X", &pos.x, 0.0f, 768);
+			ImGui::SliderFloat("Y", &pos.y, 0.0f, 480);
+
 			if (ImGui::Button("Render scene"))
 			{
+				x += 1;
 				std::cout << "Raytracing\n";
 			}
 			ImGui::Text("Create scene");
 			if (ImGui::Button("Add sphere"))
 			{
-				std::cout << "Added sphere\n";
+				std::cout << "Value is: " << x << "\n";
+				positions.push_back(pos);
 			}
+
+
 			ImGui::EndChild();
 			ImGui::EndGroup();
 		}
@@ -85,7 +94,17 @@ void App::GUI()
 			ImVec2 viewPos = ImGui::GetWindowPos();
 			ImVec2 viewSize = ImGui::GetWindowSize();
 			ImVec2 maxPos = ImVec2(viewPos.x + viewSize.x, viewPos.y + viewSize.y);
+			
+			ImVec2 currPos = ImVec2(viewPos.x + pos.x, viewPos.y + pos.y);
+			
 			ImGui::GetWindowDrawList()->AddImage((void*)(intptr_t)viewportTexture_.ID_, viewPos, maxPos);
+			ImGui::GetWindowDrawList()->AddCircleFilled(currPos, 5.0f, ImColor(0, 255, 0, 255));
+			for (uint32_t i = 0; i < positions.size(); ++i)
+			{
+				ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(positions[i].x + viewPos.x, positions[i].y + viewPos.y), 5.0f, ImColor(0, 0, 255, 255));
+			}
+
+
 			ImGui::EndChild();
 			ImGui::EndGroup();
 		}
@@ -108,6 +127,7 @@ void App::GUI()
 
 App::App(int width, int height) : width_{ width }, height_{ height }, renderTexture_{ Texture() }, viewportTexture_{ Texture() }
 {
+	positions = std::vector<ImVec2>();
 	// Setup window
 	glfwSetErrorCallback(glfw_error_callback);
 	if (!glfwInit())
@@ -147,10 +167,6 @@ App::App(int width, int height) : width_{ width }, height_{ height }, renderText
 App::~App()
 {
 	std::cout << "Closing application. Goodbye!\n";
-	for (auto& layer : layerStack_)
-		layer->onDetach();
-
-	layerStack_.clear();
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -182,7 +198,8 @@ void App::run()
 
 		// Do things here
 		update();
-
+		render();
+		renderUI();
 		// OpenGl rendering
 		
 		// Render ImGui
